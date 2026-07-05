@@ -11,50 +11,71 @@
 <body class="bg-slate-900 text-white">
 
   <!-- ============ TOP NAVIGATION BAR ============ -->
-  <nav class="flex items-center gap-4 px-5 h-16 border-b border-slate-700 bg-slate-800">
+  <nav class="relative flex items-center gap-2 sm:gap-4 px-3 sm:px-5 h-16 border-b border-slate-700 bg-slate-800">
 
     <!-- Logo + app name -->
-    <div class="flex items-center gap-2">
-      <div class="w-8 h-8 rounded-lg bg-orange-500 text-slate-900 font-bold flex items-center justify-center">A</div>
+    <div class="flex items-center gap-2 shrink-0">
+      <div class="w-8 h-8 rounded-lg bg-orange-500 text-slate-900 font-bold flex items-center justify-center shrink-0">A</div>
       <span class="font-bold text-lg">AiSpot</span>
     </div>
 
-    <!-- Page links -->
-    <div class="flex gap-1 flex-1" id="navLinks">
-      <button data-page="home" class="nav-btn px-3 py-2 rounded-lg text-sm">Home</button>
-      <button data-page="about" class="nav-btn px-3 py-2 rounded-lg text-sm">About</button>
-      <button data-page="contact" class="nav-btn px-3 py-2 rounded-lg text-sm">Contact</button>
+    <!-- Page links: row on desktop, hid on mobile -->
+    <div class="hidden sm:flex gap-1 flex-1 overflow-x-auto" id="navLinks">
+      <button data-page="home" class="nav-btn px-3 py-2 rounded-lg text-sm whitespace-nowrap">Home</button>
+      <button data-page="about" class="nav-btn px-3 py-2 rounded-lg text-sm whitespace-nowrap">About</button>
+      <button data-page="contact" class="nav-btn px-3 py-2 rounded-lg text-sm whitespace-nowrap">Contact</button>
+      <button data-page="saved" class="nav-btn px-3 py-2 rounded-lg text-sm whitespace-nowrap">★ Saved</button>
     </div>
 
-    <!-- Search box -->
+    <!-- Search box: desktop only here, mobile copy live in dropdown -->
     <input id="searchBox" type="text" placeholder="Search tools..."
-      class="hidden sm:block bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm w-56 focus:outline-none focus:border-orange-500">
+      class="hidden sm:block w-56 bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-500">
 
-    <!-- Saved tools + logout -->
-    <button data-page="saved" class="nav-btn px-3 py-2 rounded-lg text-sm">★ Saved</button>
-    <a href="index.html" class="px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white">Sign out</a>
+    <!-- Sign out: desktop only, mobile copy lives in dropdown -->
+    <a href="index.html" class="hidden sm:block px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white whitespace-nowrap shrink-0">Sign out</a>
+
+    <!-- Hamburger button: mobile only -->
+    <button id="menuToggleBtn" class="sm:hidden ml-auto p-2 rounded-lg text-slate-300 hover:bg-slate-700" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <!-- Mobile dropdown panel: nav links + search + sign out -->
+    <div id="mobileMenu" class="hidden sm:hidden absolute top-16 left-0 right-0 bg-slate-800 border-b border-slate-700 flex flex-col gap-1 p-3 z-40">
+      <button data-page="home" class="nav-btn text-left px-3 py-2 rounded-lg text-sm">Home</button>
+      <button data-page="about" class="nav-btn text-left px-3 py-2 rounded-lg text-sm">About</button>
+      <button data-page="contact" class="nav-btn text-left px-3 py-2 rounded-lg text-sm">Contact</button>
+      <button data-page="saved" class="nav-btn text-left px-3 py-2 rounded-lg text-sm">★ Saved</button>
+      <input id="searchBoxMobile" type="text" placeholder="Search tools..."
+        class="mt-1 w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-orange-500">
+      <a href="index.html" class="mt-1 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white">Sign out</a>
+    </div>
   </nav>
 
-  <div class="flex">
+  <div class="flex flex-col md:flex-row">
 
-    <!-- ============ LEFT SIDEBAR: CATEGORIES ============ -->
+    <!-- ============ MOBILE CATEGORY BAR (horizontal scroll, replaces sidebar below md) ============ -->
+    <div class="md:hidden border-b border-slate-700 p-3 overflow-x-auto">
+      <div id="categoryListMobile" class="flex gap-2 w-max"></div>
+    </div>
+
+    <!-- ============ LEFT SIDEBAR: CATEGORIES (md and up) ============ -->
     <aside class="w-56 shrink-0 border-r border-slate-700 p-4 hidden md:block">
       <h3 class="text-xs font-semibold text-slate-400 uppercase mb-2">Categories</h3>
       <div id="categoryList" class="flex flex-col gap-1"></div>
     </aside>
 
     <!-- ============ MAIN CONTENT AREA ============ -->
-    <main class="flex-1 p-6">
+    <main class="flex-1 p-4 sm:p-6">
 
       <!-- HOME PAGE: hero banner + tool grid -->
       <section id="page-home">
-        <div class="rounded-xl bg-slate-800 border border-slate-700 p-6 mb-6">
+        <div class="rounded-xl bg-slate-800 border border-slate-700 p-4 sm:p-6 mb-6">
           <p class="text-orange-400 text-xs font-semibold uppercase mb-2">The collection</p>
-          <h1 class="text-2xl font-bold mb-2">Every AI tool, sorted into one spot.</h1>
-          <p class="text-slate-400 text-sm">Browse by category on the left, or search by name above.</p>
+          <h1 class="text-xl sm:text-2xl font-bold mb-2">Every AI tool, sorted into one spot.</h1>
+          <p class="text-slate-400 text-sm">Browse by category above, or search by name at the top.</p>
         </div>
 
-        <h2 id="gridTitle" class="text-xl font-bold mb-3">All tools</h2>
+        <h2 id="gridTitle" class="text-lg sm:text-xl font-bold mb-3">All tools</h2>
         <div id="toolGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
       </section>
 
@@ -89,7 +110,7 @@
 
   <!-- ============ TOOL DETAIL POPUP ============ -->
   <div id="detailOverlay" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
-    <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 w-full max-w-md relative">
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 sm:p-6 w-full max-w-md relative max-h-[90vh] overflow-y-auto">
       <button id="closeDetailBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
       <div class="flex items-center gap-3 mb-4">
         <div id="detailBadge" class="w-12 h-12 rounded-lg flex items-center justify-center font-bold text-slate-900"></div>
@@ -99,9 +120,9 @@
         </div>
       </div>
       <p id="detailDescription" class="text-slate-300 text-sm mb-6"></p>
-      <div class="flex gap-3">
+      <div class="flex flex-col sm:flex-row gap-3">
         <a id="detailVisitLink" href="#" target="_blank" class="flex-1 text-center bg-orange-500 hover:bg-orange-400 text-slate-900 font-semibold rounded-lg p-3">Visit tool ↗</a>
-        <button id="detailSaveBtn" class="border border-slate-600 rounded-lg px-4 text-sm">☆ Save</button>
+        <button id="detailSaveBtn" class="border border-slate-600 rounded-lg px-4 py-3 sm:py-0 text-sm">☆ Save</button>
       </div>
     </div>
   </div>
@@ -114,6 +135,9 @@
     .category-btn { color: #94a3b8; }
     .category-btn:hover { background: #334155; color: white; }
     .category-btn.active { background: #3a2418; color: #FF6B35; }
+    .category-chip { color: #94a3b8; background: #1e293b; border: 1px solid #334155; white-space: nowrap; }
+    .category-chip:hover { background: #334155; color: white; }
+    .category-chip.active { background: #3a2418; color: #FF6B35; border-color: #FF6B35; }
   </style>
 
   <!-- All the app logic lives in this separate file -->
