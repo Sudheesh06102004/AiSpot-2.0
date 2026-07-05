@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AiSpot - AI tool directory</title>
+
+<!-- Tailwind CSS (loaded from CDN, no build step needed) -->
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white">
+
+  <!-- ============ TOP NAVIGATION BAR ============ -->
+  <nav class="flex items-center gap-4 px-5 h-16 border-b border-slate-700 bg-slate-800">
+
+    <!-- Logo + app name -->
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-orange-500 text-slate-900 font-bold flex items-center justify-center">A</div>
+      <span class="font-bold text-lg">AiSpot</span>
+    </div>
+
+    <!-- Page links -->
+    <div class="flex gap-1 flex-1" id="navLinks">
+      <button data-page="home" class="nav-btn px-3 py-2 rounded-lg text-sm">Home</button>
+      <button data-page="about" class="nav-btn px-3 py-2 rounded-lg text-sm">About</button>
+      <button data-page="contact" class="nav-btn px-3 py-2 rounded-lg text-sm">Contact</button>
+    </div>
+
+    <!-- Search box -->
+    <input id="searchBox" type="text" placeholder="Search tools..."
+      class="hidden sm:block bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm w-56 focus:outline-none focus:border-orange-500">
+
+    <!-- Saved tools + logout -->
+    <button data-page="saved" class="nav-btn px-3 py-2 rounded-lg text-sm">★ Saved</button>
+    <a href="index.html" class="px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-white">Sign out</a>
+  </nav>
+
+  <div class="flex">
+
+    <!-- ============ LEFT SIDEBAR: CATEGORIES ============ -->
+    <aside class="w-56 shrink-0 border-r border-slate-700 p-4 hidden md:block">
+      <h3 class="text-xs font-semibold text-slate-400 uppercase mb-2">Categories</h3>
+      <div id="categoryList" class="flex flex-col gap-1"></div>
+    </aside>
+
+    <!-- ============ MAIN CONTENT AREA ============ -->
+    <main class="flex-1 p-6">
+
+      <!-- HOME PAGE: hero banner + tool grid -->
+      <section id="page-home">
+        <div class="rounded-xl bg-slate-800 border border-slate-700 p-6 mb-6">
+          <p class="text-orange-400 text-xs font-semibold uppercase mb-2">The collection</p>
+          <h1 class="text-2xl font-bold mb-2">Every AI tool, sorted into one spot.</h1>
+          <p class="text-slate-400 text-sm">Browse by category on the left, or search by name above.</p>
+        </div>
+
+        <h2 id="gridTitle" class="text-xl font-bold mb-3">All tools</h2>
+        <div id="toolGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </section>
+
+      <!-- SAVED PAGE -->
+      <section id="page-saved" class="hidden">
+        <h2 class="text-xl font-bold mb-3">Saved tools</h2>
+        <div id="savedGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </section>
+
+      <!-- ABOUT PAGE -->
+      <section id="page-about" class="hidden max-w-2xl">
+        <h1 class="text-2xl font-bold mb-4">About AiSpot</h1>
+        <p class="text-slate-400 mb-4">AiSpot is a collection of AI tools, organized by category, so you can find what you need without digging through search results.</p>
+        <p class="text-slate-400 mb-4">Pick a category on the left, open a tool card to read more, and star any tool to keep it in your Saved list.</p>
+        <p class="text-slate-400">New tools get added as the space moves — this is a living directory, not a one-time list.</p>
+      </section>
+
+      <!-- CONTACT PAGE -->
+      <section id="page-contact" class="hidden max-w-md">
+        <h1 class="text-2xl font-bold mb-4">Contact</h1>
+        <p class="text-slate-400 mb-4">Spotted a tool that should be listed? Send a note.</p>
+        <form id="contactForm" class="flex flex-col gap-3">
+          <input type="text" placeholder="Your name" required class="bg-slate-700 border border-slate-600 rounded-lg p-3 text-sm focus:outline-none focus:border-orange-500">
+          <input type="email" placeholder="Your email" required class="bg-slate-700 border border-slate-600 rounded-lg p-3 text-sm focus:outline-none focus:border-orange-500">
+          <textarea placeholder="Your message" required class="bg-slate-700 border border-slate-600 rounded-lg p-3 text-sm h-24 focus:outline-none focus:border-orange-500"></textarea>
+          <button type="submit" class="bg-orange-500 hover:bg-orange-400 text-slate-900 font-semibold rounded-lg p-3 self-start px-6">Send message</button>
+        </form>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ============ TOOL DETAIL POPUP ============ -->
+  <div id="detailOverlay" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center p-4 z-50">
+    <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 w-full max-w-md relative">
+      <button id="closeDetailBtn" class="absolute top-4 right-4 text-slate-400 hover:text-white">✕</button>
+      <div class="flex items-center gap-3 mb-4">
+        <div id="detailBadge" class="w-12 h-12 rounded-lg flex items-center justify-center font-bold text-slate-900"></div>
+        <div>
+          <h2 id="detailName" class="text-lg font-bold"></h2>
+          <p id="detailCategory" class="text-xs text-slate-400"></p>
+        </div>
+      </div>
+      <p id="detailDescription" class="text-slate-300 text-sm mb-6"></p>
+      <div class="flex gap-3">
+        <a id="detailVisitLink" href="#" target="_blank" class="flex-1 text-center bg-orange-500 hover:bg-orange-400 text-slate-900 font-semibold rounded-lg p-3">Visit tool ↗</a>
+        <button id="detailSaveBtn" class="border border-slate-600 rounded-lg px-4 text-sm">☆ Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Small extra styles Tailwind doesn't cover -->
+  <style>
+    .nav-btn { color: #94a3b8; }
+    .nav-btn:hover { background: #334155; color: white; }
+    .nav-btn.active { background: #334155; color: white; }
+    .category-btn { color: #94a3b8; }
+    .category-btn:hover { background: #334155; color: white; }
+    .category-btn.active { background: #3a2418; color: #FF6B35; }
+  </style>
+
+  <!-- All the app logic lives in this separate file -->
+  <script src="script.js"></script>
+</body>
+</html>

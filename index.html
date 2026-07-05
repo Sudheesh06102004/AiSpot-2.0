@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AiSpot - Sign in</title>
+
+<!-- Tailwind CSS (loaded from CDN, no build step needed) -->
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<!-- Dark background, everything centered on the screen -->
+<body class="bg-slate-900 min-h-screen flex items-center justify-center p-4">
+
+  <div class="bg-slate-800 border border-slate-700 rounded-xl p-8 w-full max-w-sm">
+
+    <!-- Logo + app name -->
+    <div class="flex items-center gap-2 mb-6">
+      <div class="w-9 h-9 rounded-lg bg-orange-500 text-slate-900 font-bold flex items-center justify-center">A</div>
+      <span class="text-white text-xl font-bold">AiSpot</span>
+    </div>
+
+    <h1 class="text-white text-2xl font-bold mb-1">Sign in</h1>
+    <p class="text-slate-400 text-sm mb-6">Find the right AI tool, fast.</p>
+
+    <!-- Email field -->
+    <label class="block text-slate-400 text-xs mb-1">Email</label>
+    <input id="email" type="email" placeholder="Enter your email" 
+      class="w-full p-3 mb-4 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-orange-500">
+
+    <!-- Password field -->
+    <label class="block text-slate-400 text-xs mb-1">Password</label>
+    <input id="password" type="password" placeholder="Enter your password"
+      class="w-full p-3 mb-2 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:border-orange-500">
+
+    <!-- Error message, hidden until needed -->
+    <p id="error" class="text-orange-400 text-xs mb-4 hidden">Please enter an email and password.</p>
+    <!-- Sign in button -->
+    <button id="signInBtn"
+      class="w-full bg-orange-500 hover:bg-orange-400 text-slate-900 font-semibold p-3 rounded-lg">
+      Sign in
+    </button>
+
+    <!-- Guest option -->
+    <p class="text-center text-slate-400 text-sm mt-4">
+      No account needed —
+      <button id="guestBtn" class="text-orange-400 font-medium">continue as guest</button>
+    </p>
+
+  </div>
+
+  <script>
+    // Grab the elements we need
+    const emailInput = document.getElementById('email');
+    const passwordInput = document.getElementById('password');
+    const errorText = document.getElementById('error');
+
+    // Send the user to the home page
+    function goToHomePage() {
+      window.location.href = 'home.html';
+    }
+
+    // "Sign in" button click
+    document.getElementById('signInBtn').addEventListener('click', function () {
+      if (emailInput.value.trim() === '' || passwordInput.value.trim() === '') {
+        errorText.classList.remove('hidden'); // show error
+        return;
+      }
+      errorText.classList.add('hidden');
+      goToHomePage();
+    });
+
+    // "Continue as guest" button click
+    document.getElementById('guestBtn').addEventListener('click', goToHomePage);
+  </script>
+
+</body>
+</html>
