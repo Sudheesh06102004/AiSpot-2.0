@@ -74,26 +74,35 @@ function getFilteredTools() {
   });
 }
 
-// Build the sidebar list of categories
+// Build the sidebar list of categories (desktop) + chip bar (mobile)
 function renderCategoryList() {
   const container = document.getElementById('categoryList');
-  let html = '<button class="category-btn text-left px-3 py-2 rounded-lg text-sm ' +
+  const mobileContainer = document.getElementById('categoryListMobile');
+
+  let sidebarHtml = '<button class="category-btn text-left px-3 py-2 rounded-lg text-sm ' +
+             (currentCategory === 'all' ? 'active' : '') + '" data-category="all">All tools</button>';
+  let chipHtml = '<button class="category-chip px-3 py-2 rounded-full text-sm ' +
              (currentCategory === 'all' ? 'active' : '') + '" data-category="all">All tools</button>';
 
   categories.forEach(function (category) {
     const isActive = currentCategory === category.id ? 'active' : '';
-    html += '<button class="category-btn text-left px-3 py-2 rounded-lg text-sm ' + isActive +
+    sidebarHtml += '<button class="category-btn text-left px-3 py-2 rounded-lg text-sm ' + isActive +
+            '" data-category="' + category.id + '">' + category.name + '</button>';
+    chipHtml += '<button class="category-chip px-3 py-2 rounded-full text-sm ' + isActive +
             '" data-category="' + category.id + '">' + category.name + '</button>';
   });
 
-  container.innerHTML = html;
+  container.innerHTML = sidebarHtml;
+  mobileContainer.innerHTML = chipHtml;
 
-  // Make each category button clickable
-  container.querySelectorAll('.category-btn').forEach(function (button) {
-    button.addEventListener('click', function () {
-      currentCategory = button.dataset.category;
-      renderCategoryList();
-      renderToolGrid();
+  // Make each category button clickable (both desktop and mobile copies)
+  [container, mobileContainer].forEach(function (list) {
+    list.querySelectorAll('[data-category]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        currentCategory = button.dataset.category;
+        renderCategoryList();
+        renderToolGrid();
+      });
     });
   });
 }
@@ -104,7 +113,7 @@ function buildToolCardHtml(tool) {
   const isSaved = savedToolIds.includes(tool.id);
 
   return (
-    '<button class="tool-card text-left bg-slate-800 border border-slate-700 rounded-xl p-4 hover:border-orange-500" data-id="' + tool.id + '">' +
+    '<button class="tool-card text-left bg-slate-800 border border-slate-700 rounded-xl p-3 sm:p-4 hover:border-orange-500" data-id="' + tool.id + '">' +
       '<div class="flex items-center gap-3 mb-3">' +
         '<div class="w-10 h-10 rounded-lg flex items-center justify-center font-bold text-slate-900" style="background:' + tool.color + '">' + initials + '</div>' +
         '<div>' +
@@ -221,14 +230,35 @@ function showPage(pageName) {
 
 /* ---------------- EVENT LISTENERS (things that react to clicks/typing) ---------------- */
 
-// Nav bar buttons (Home / About / Contact / Saved)
+// Nav bar buttons (desktop row + mobile dropdown, both share .nav-btn)
 document.querySelectorAll('.nav-btn').forEach(function (button) {
-  button.addEventListener('click', function () { showPage(button.dataset.page); });
+  button.addEventListener('click', function () {
+    showPage(button.dataset.page);
+    closeMobileMenu();
+  });
 });
 
-// Search box typing
+// Hamburger toggle
+document.getElementById('menuToggleBtn').addEventListener('click', function () {
+  document.getElementById('mobileMenu').classList.toggle('hidden');
+});
+
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.add('hidden');
+}
+
+// Search box typing (desktop input)
 document.getElementById('searchBox').addEventListener('input', function (event) {
   currentSearch = event.target.value;
+  document.getElementById('searchBoxMobile').value = event.target.value;
+  showPage('home');
+  renderToolGrid();
+});
+
+// Search box typing (mobile dropdown input)
+document.getElementById('searchBoxMobile').addEventListener('input', function (event) {
+  currentSearch = event.target.value;
+  document.getElementById('searchBox').value = event.target.value;
   showPage('home');
   renderToolGrid();
 });
